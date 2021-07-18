@@ -34,7 +34,8 @@ router.get('/productid/:productid', function (req, res) {
         console.log("bid_starts: " + bid_starts);
         console.log("bid ends: " + bid_ends);
 
-        if (bid_starts > kr_curr || bid_ends < kr_curr) {
+        // if (bid_starts > kr_curr || bid_ends < kr_curr) {
+        if (bid_starts > kr_curr) {
             // page unavailable before the bidding start time || after the bid ends
             resultCode = 401;
             message = "Page not accessible";
