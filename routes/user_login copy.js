@@ -70,13 +70,6 @@ router.get('/request_userinfo', function (req, res) {
             resultCode = 204;
             message = "non-existing token";
             ok = 0;
-
-            res.json({
-                'code': resultCode,
-                'message': message,
-                'ok': ok
-            });
-
         } else {
             resultCode = 200;
             message = "log-in successful";
@@ -84,32 +77,25 @@ router.get('/request_userinfo', function (req, res) {
             var username = result.username;
             console.log(username);
 
-            // due to asynchronous character of nodejs
-            getUserWish(username).then(wishResult => {
-                // console.log('result received: ' + wishResult);
-                wish = wishResult;
-                return getUserMyArt(username)
-            }).then(myArtResult => {
-                // console.log('result received: ' + myArtResult);
-                myArt = myArtResult;
-            }).then(response => {
-                res.json({
-                    'code': resultCode,
-                    'message': message,
-                    'data': {
-                        'username': result.username,
-                        'avatar': result.profile_image,
-                        'money': result.nano_bk,
-                        'wish': wish,
-                        'MyArt': myArt
-                    },
-                    'ok': ok
-                });
-            })
 
+            wish = getUserWish(username);
+            myArt = getUserMyArt(username);
 
-
+            console.log(wish, myArt);
         }
+        res.json({
+            'code': resultCode,
+            'message': message,
+            'data': {
+                'username': result.username,
+                'avatar': result.profile_image,
+                'money': result.nano_bk,
+                'wish': wish,
+                'MyArt': myArt
+            },
+            'ok': ok
+        });
+
     });
 
 })
@@ -147,25 +133,21 @@ function insertToken(email, token) {
 }
 
 function getUserWish(username) {
-    return new Promise((resolve, reject) => {
-        sql = "select * from wishlist where username = ?";
-        connection.query(sql, username, function (err, result) {
-            if (err) reject(err);
-            else resolve(result);
-        });
-    })
-
+    sql = "select * from wishlist where username = ?";
+    connection.query(sql, username, function (err, result) {
+        if (err) console.log(error);
+        console.log(result);
+        return result;
+    });
 }
 
 function getUserMyArt(username) {
-    return new Promise((resolve, reject) => {
-        sql = "select * from myart where username = ?";
-        connection.query(sql, username, function (err, result) {
-            if (err) reject(err);
-            else resolve(result);
-        });
-    })
+    sql = "select * from myart where username = ?";
+    connection.query(sql, username, function (err, result) {
+        if (err) console.log(error);
+        console.log(result);
+        return result;
+    });
 }
-
 
 module.exports = router;
