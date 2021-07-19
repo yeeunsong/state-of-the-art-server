@@ -79,10 +79,10 @@ router.get('/request_userinfo', function (req, res) {
 
         } else {
             resultCode = 200;
-            message = "log-in successful";
+            message = "request successful";
             ok = 1;
             var username = result.username;
-            console.log(username);
+            // console.log(username);
 
             // due to asynchronous character of nodejs
             getUserWish(username).then(wishResult => {

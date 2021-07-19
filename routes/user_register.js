@@ -70,84 +70,51 @@ router.get('/request_userinfo', function (req, res) {
             resultCode = 204;
             message = "non-existing token";
             ok = 0;
+
+            res.json({
+                'code': resultCode,
+                'message': message,
+                'ok': ok
+            });
+
         } else {
             resultCode = 200;
-            message = "log-in successful";
+            message = "request successful";
             ok = 1;
             var username = result.username;
-            console.log(username);
+            // console.log(username);
+
+            // due to asynchronous character of nodejs
+            getUserWish(username).then(wishResult => {
+                // console.log('result received: ' + wishResult);
+                wish = wishResult;
+                return getUserMyArt(username)
+            }).then(myArtResult => {
+                // console.log('result received: ' + myArtResult);
+                myArt = myArtResult;
+            }).then(response => {
+                res.json({
+                    'code': resultCode,
+                    'message': message,
+                    'data': {
+                        'username': result.username,
+                        'avatar': result.profile_image,
+                        'money': result.nano_bk,
+                        'wish': wish,
+                        'MyArt': myArt
+                    },
+                    'ok': ok
+                });
+            })
 
 
-            wish = getUserWish(username);
-            myArt = getUserMyArt(username);
 
-            console.log(wish, myArt);
         }
-        res.json({
-            'code': resultCode,
-            'message': message,
-            'data': {
-                'username': result.username,
-                'avatar': result.profile_image,
-                'money': result.nano_bk,
-                'wish': wish,
-                'MyArt': myArt
-            },
-            'ok': ok
-        });
-
     });
 
 })
 
 
-function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if (token == null) return res.sendStatus(401);
-    // you don't have a token
 
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403);
-        // the token you have is no longer valid
-        req.user = user
-        next()
-    });
-}
-
-
-function makeToken(email) {
-    const user = { name: email }
-    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-    return accessToken;
-}
-
-
-function insertToken(email, token) {
-    sql = "update userinfo set token = ? where email =?"
-
-    connection.query(sql, [token, email], function (err, result) {
-        if (err) console.log(error);
-        console.log("token insertion");
-    });
-}
-
-function getUserWish(username) {
-    sql = "select * from wishlist where username = ?";
-    connection.query(sql, username, function (err, result) {
-        if (err) console.log(error);
-        console.log(result);
-        return result;
-    });
-}
-
-function getUserMyArt(username) {
-    sql = "select * from myart where username = ?";
-    connection.query(sql, username, function (err, result) {
-        if (err) console.log(error);
-        console.log(result);
-        return result;
-    });
-}
 
 module.exports = router;
