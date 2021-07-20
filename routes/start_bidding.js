@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const base64Img = require('base64-img');
 
 const onBidding = require('../middleware/websockets');
 const connection = require('../database');
 var path = require('path');
 
-let bidding_participants = [];
+var bidding_participants = [];
 
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
@@ -27,16 +28,21 @@ router.get('/productid/:productid', function (req, res) {
         var ok = 0;
         var data = "";
 
-        const curr = new Date();
-        const utc = curr.getTime() + (curr.getTimezoneOffset() * 60 * 1000);
-        const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-        const kr_curr = new Date(utc + (KR_TIME_DIFF));
-        const bidding_duration = 100 * 60 * 1000; // 100minutes
-        const bid_starts = result.start_bidding;
-        const bid_ends = new Date(bid_starts.getTime() + bidding_duration)
+        var curr = new Date();
+        var utc = curr.getTime() + (curr.getTimezoneOffset() * 60 * 1000);
+        var KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+        var kr_curr = new Date(utc + (KR_TIME_DIFF));
+        var bidding_duration = 100 * 60 * 1000; // 100minutes
+        var bid_starts = result.start_bidding;
+        var bid_ends = new Date(bid_starts.getTime() + bidding_duration)
         // console.log("kr_curr: " + kr_curr);
         // console.log("bid_starts: " + bid_starts);
         // console.log("bid ends: " + bid_ends);
+
+
+        var img_path = path.join(__dirname, '../public/product_images/' + result.image_name);
+        var product_img = base64Img.base64Sync(img_path);
+
 
         // if (bid_starts > kr_curr || bid_ends < kr_curr) {
         if (bid_starts > kr_curr) {
@@ -46,7 +52,7 @@ router.get('/productid/:productid', function (req, res) {
             ok = 0;
 
         } else {
-            // Start bidding!
+            // Start bidding! 
             resultCode = 200;
             message = "Bidding starts!";
             ok = 1;
@@ -61,10 +67,20 @@ router.get('/productid/:productid', function (req, res) {
             'message': message,
             'ok': ok,
             'data': {
+                // 'currentprice': 500
+                // 'title': "CPRKR",
+                // 'subtitle': "Jean-Michel Basquiat (1982)",
+                // 'engTitle':"CPRKR", 
+                // 'id': 
+                // 'context': result.introduction,
+                // 'fasttime': result.start_bidding,
+                // 'currentUsers': bidding_participants,
+
+
                 'currentprice': result.minimum_price,
                 'title': result.product_title,
                 'context': result.introduction,
-                'picture': null,
+                'picture': product_img,
                 // NEED TO INSERT PICTURE CODE!
                 'fasttime': result.start_bidding,
                 'currentUsers': bidding_participants,
@@ -88,9 +104,17 @@ router.get('/productid/:productid/participate', function (req, res) {
 
     connection.query(sql, user_token, function (err, result) {
         var resultCode = 404;
-        // console.log(result);
+        // console.log(result); 
         result = result[0];
-        participantInfo = { 'name': result.username, 'avatar': null };
+
+        img_path = path.join(__dirname, '../public/avatar_images/' + result.profile_image);
+
+        // console.log(img_path)
+
+        avatar_img = base64Img.base64Sync(img_path);
+
+        // console.log(avatar_img);
+        participantInfo = { 'name': result.username, 'avatar': avatar_img };
         bidding_participants.push(participantInfo);
         // need to change avatar image foramt
         if (err) {
@@ -108,5 +132,5 @@ router.get('/productid/:productid/participate', function (req, res) {
     });
 });
 
-
+module.exports.bidding_participants = bidding_participants;
 module.exports = router;

@@ -9,7 +9,7 @@ router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
 
 // url for login
-// link format: URL_BASE/login/
+// link format: URL_BASE/login/ 
 router.post('/', (req, res) => {
     // Authenticate user needed
     const email = req.body.email;
@@ -26,6 +26,10 @@ router.post('/', (req, res) => {
 
         if (err) {
             console.log(err);
+        } else if (!result) {
+            resultCode = 204;
+            message = "incorrect email address";
+            ok = 0;
         } else if (password !== result.password) {
             resultCode = 204;
             message = "incorrect password";
@@ -52,7 +56,8 @@ router.post('/', (req, res) => {
 
 
 router.get('/request_userinfo', function (req, res) {
-    const token = req.headers.token;
+    var token = req.headers.token;
+    console.log(token);
     // console.log(req.headers);
     // console.log(token);
     sql = "select * from userinfo where token = ?";
@@ -63,10 +68,11 @@ router.get('/request_userinfo', function (req, res) {
         var wish = "";
         var myArt = "";
         result = result[0];
+        console.log(result);
 
         if (err) {
             console.log(err);
-        } else if (result.length === 0) {
+        } else if (!result) {
             resultCode = 204;
             message = "non-existing token";
             ok = 0;
