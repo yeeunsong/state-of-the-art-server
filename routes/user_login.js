@@ -4,6 +4,8 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const connection = require('../database');
+const base64Img = require('base64-img');
+var path = require('path');
 
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
@@ -56,7 +58,7 @@ router.post('/', (req, res) => {
 
 
 router.get('/request_userinfo', function (req, res) {
-    var token = req.headers.token;
+    var token = (req.headers.token).toString()
     console.log(token);
     // console.log(req.headers);
     // console.log(token);
@@ -69,6 +71,9 @@ router.get('/request_userinfo', function (req, res) {
         var myArt = "";
         result = result[0];
         console.log(result);
+
+        img_path = path.join(__dirname, '../public/avatar_images/' + result.profile_image);
+        avatar_img = base64Img.base64Sync(img_path);
 
         if (err) {
             console.log(err);
@@ -104,10 +109,12 @@ router.get('/request_userinfo', function (req, res) {
                     'message': message,
                     'data': {
                         'username': result.username,
-                        'avatar': result.profile_image,
+                        'avatar': avatar_img,
                         'money': result.nano_bk,
                         'wish': wish,
                         'MyArt': myArt
+                        // 'wish': [0, 1],
+                        // 'MyArt': [0, 1]
                     },
                     'ok': ok
                 });
@@ -148,7 +155,7 @@ function insertToken(email, token) {
 
     connection.query(sql, [token, email], function (err, result) {
         if (err) console.log(error);
-        console.log("token insertion");
+        // console.log("token insertion");
     });
 }
 
@@ -157,7 +164,10 @@ function getUserWish(username) {
         sql = "select * from wishlist where username = ?";
         connection.query(sql, username, function (err, result) {
             if (err) reject(err);
-            else resolve(result);
+            else {
+                resolve(result);
+                // console.log(result); 
+            }
         });
     })
 
@@ -168,7 +178,10 @@ function getUserMyArt(username) {
         sql = "select * from myart where username = ?";
         connection.query(sql, username, function (err, result) {
             if (err) reject(err);
-            else resolve(result);
+            else {
+                resolve(result);
+                console.log(result);
+            }
         });
     })
 }

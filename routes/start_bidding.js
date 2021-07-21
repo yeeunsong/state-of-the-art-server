@@ -6,7 +6,7 @@ const onBidding = require('../middleware/websockets');
 const connection = require('../database');
 var path = require('path');
 
-var bidding_participants = [];
+bidding_participants = require('../constants/bid_participants').bidding_participants;
 
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
@@ -35,55 +35,39 @@ router.get('/productid/:productid', function (req, res) {
         var bidding_duration = 100 * 60 * 1000; // 100minutes
         var bid_starts = result.start_bidding;
         var bid_ends = new Date(bid_starts.getTime() + bidding_duration)
-        // console.log("kr_curr: " + kr_curr);
-        // console.log("bid_starts: " + bid_starts);
-        // console.log("bid ends: " + bid_ends);
+        // var img_path = path.join(__dirname, '../public/product_images/' + result.image_name);
+        // var product_img = base64Img.base64Sync(img_path);
 
+        // if (bid_starts > kr_curr) {
+        //     // page unavailable before the bidding start time || after the bid ends
+        //     resultCode = 401;
+        //     message = "Page not accessible";
+        //     ok = 0;
 
-        var img_path = path.join(__dirname, '../public/product_images/' + result.image_name);
-        var product_img = base64Img.base64Sync(img_path);
+        // } else {
+        // Start bidding! 
+        resultCode = 200;
+        message = "Bidding starts!";
+        ok = 1;
 
-
-        // if (bid_starts > kr_curr || bid_ends < kr_curr) {
-        if (bid_starts > kr_curr) {
-            // page unavailable before the bidding start time || after the bid ends
-            resultCode = 401;
-            message = "Page not accessible";
-            ok = 0;
-
-        } else {
-            // Start bidding! 
-            resultCode = 200;
-            message = "Bidding starts!";
-            ok = 1;
-            // Product information is in the query response:
-            // Product username, minimum_price, product_info
-
-            // userinfo에서 정보 받기
-        }
-
+        //     // userinfo에서 정보 받기
+        // }
+        console.log("participate request for: " + product_id);
+        console.log(result);
         res.send({
             'code': resultCode,
             'message': message,
             'ok': ok,
             'data': {
-                // 'currentprice': 500
-                // 'title': "CPRKR",
-                // 'subtitle': "Jean-Michel Basquiat (1982)",
-                // 'engTitle':"CPRKR", 
-                // 'id': 
-                // 'context': result.introduction,
-                // 'fasttime': result.start_bidding,
-                // 'currentUsers': bidding_participants,
-
-
                 'currentprice': result.minimum_price,
                 'title': result.product_title,
                 'context': result.introduction,
-                'picture': product_img,
-                // NEED TO INSERT PICTURE CODE!
-                'fasttime': result.start_bidding,
+                'src': result.image_name,
+                'subtitle': result.subTitle,
+                'engTitle': result.engTitle,
+                'date': result.start_bidding,
                 'currentUsers': bidding_participants,
+                'id': product_id
             }
         });
     });
@@ -128,9 +112,11 @@ router.get('/productid/:productid/participate', function (req, res) {
             'currentUsers': bidding_participants,
             'ok': ok
         });
+        ////////////////////////////////////
+        console.log("check in bidding - bidding_participants: " + bidding_participants[0].name);
         // needs check of bidding_participants format
     });
 });
 
-module.exports.bidding_participants = bidding_participants;
+// exports.bidding_participants = bidding_participants;
 module.exports = router;

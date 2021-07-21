@@ -10,6 +10,8 @@ const loginPageRoute = require("./routes/user_login");
 const logoutPageRoute = require("./routes/user_logout");
 const registerPageRoute = require("./routes/user_register");
 const userPageRoute = require("./routes/user_page");
+const setDrawings = require("./routes/set_drawings");
+const gameRoutes = require("./routes/gamescore_update");
 
 app.use(cors());
 
@@ -20,7 +22,8 @@ app.use("/login", loginPageRoute);
 app.use("/logout", logoutPageRoute);
 app.use("/register", registerPageRoute);
 // app.use("/mypage", userPageRoute);
-
+app.use("/drawings", setDrawings);
+app.use("/game", gameRoutes);
 
 // test
 app.get("/", function (req, res) {

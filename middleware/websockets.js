@@ -4,8 +4,7 @@ const express = require('express');
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ port: 443 });
 const connection = require('../database');
-var biddingFile = require('../routes/start_bidding');
-
+var bidding_participants = require('../constants/bid_participants')
 
 /////////////////////////////////// /////////////////////////////////
 let bidPlaced = false;
@@ -16,10 +15,10 @@ let message = {
         timePassed: 0,      // auction time passed 
         previousBids: [],   // previous bids
         currentPrice: 0,      // current bidded price
-        currentUsers: biddingFile.bidding_participants
+        currentUsers: bidding_participants
     }
 }
-let bidding_time = 15; // 150 seconds
+let bidding_time = 7; // 150 seconds
 
 // async function pickItem() {
 //     try {
@@ -85,7 +84,7 @@ function broadcast() {
     wss.clients.forEach(function each(client) {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify({ "type": message.type, "content": message.content }));
-            // console.log(biddingFile.bidding_participants.name);
+            console.log("check in websocket: " + bidding_participants);
         }
     });
 }
