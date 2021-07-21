@@ -42,4 +42,4 @@ MySQL tables for project database:
 Contributors   
 - Yeeun Song, yeeunsong1019@gmail.com
 - Chanyoung Kim, itnoj15@kaist.ac.kr
-- 
+- Cassidy Nayeon Jung, friheyelow@kaist.ac.kr
