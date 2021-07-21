@@ -1,6 +1,8 @@
 # state-of-the-art-server
 **State of the Art** is a web application game about masterpiece auction.    
 Utilized **Vue.js and three.js**for frontend, and **Node.js, Express, and MySQL** for backend implementations.   
+![workflow](https://user-images.githubusercontent.com/49232148/126420713-6bc21b27-0124-4bd8-891d-50e991bafe12.png)
+
    
 The features include:
 - Art Museum implemented with three.js
@@ -28,7 +30,9 @@ Socket programming was needed for real-time auction bidding of masterpieces.
 
 
 ### 2. MySQL Database
-
+MySQL tables for project database:   
+   
+![mysql table](https://user-images.githubusercontent.com/49232148/126421239-b6081cde-3fd0-4a27-926d-cb050b6e9d6b.png) 
 
 
 
