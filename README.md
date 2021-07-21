@@ -11,6 +11,8 @@ The features include:
 - Mypage for listing MyCollection and WishList
 - ArtInfo page for setting my wishlist
 - Register, login, and logout
+
+Code for frontend is here: 
    
    
 ## FrontEnd Explanation 
@@ -26,8 +28,8 @@ The features include:
 ### 1. Socket Programming   
 Socket programming was needed for real-time auction bidding of masterpieces.   
 [npm ws (websocket)](https://www.npmjs.com/package/ws) package was used.
-
-
+   
+![슬라이드1](https://user-images.githubusercontent.com/49232148/126423037-f6da87a4-7122-40c8-835d-937ca460d3b0.JPG)
 
 ### 2. MySQL Database
 MySQL tables for project database:   
