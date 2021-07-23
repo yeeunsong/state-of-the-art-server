@@ -13,7 +13,8 @@ The features include:
 - Register, login, and logout
 
 **Code for frontend** is here: https://github.com/ChanyoungKim-kaist/state-of-the-art-client/tree/newmaster   
-   
+      
+         
    
 ## FrontEnd Explanation 
 ### 1. Art Museum
@@ -43,7 +44,8 @@ User's mypage gets updated accordingly after selection.
 Login/Register page. Utilized tokens for security.   
    
 ![login](https://user-images.githubusercontent.com/49232148/126788992-d1837ed8-3789-4d52-90db-87b9332b1801.gif)
-
+      
+         
 ## BackEnd Explanation
 ### 1. Socket Programming   
 Socket programming was needed for real-time auction bidding of masterpieces.   
@@ -56,7 +58,8 @@ MySQL tables for project database:
    
 ![mysql table](https://user-images.githubusercontent.com/49232148/126421239-b6081cde-3fd0-4a27-926d-cb050b6e9d6b.png) 
 
-
+      
+         
 
 ## Contacts
 Contributors   
