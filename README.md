@@ -8,7 +8,7 @@ The features include:
 - Art Museum implemented with three.js
 - Masterpiece auction 
 - Game for earning auction money
-- Mypage for listing MyCollection and WishList
+- Mypage for listing collections and wishList
 - ArtInfo page for setting my wishlist
 - Register, login, and logout
 
